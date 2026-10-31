@@ -41,9 +41,45 @@
     "vscode": "^1.101.0",
     "node": ">= 22"
   },
+  "files": [
+    "LICENSE",
+    "syntaxes/*.json",
+    "images/icon.png"
+  ],
   "categories": [],
   "keywords": [],
-  "contributes": {},
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "markdown-template.python.entry",
+        "path": "./syntaxes/python-entry.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "markdown-template.python.handlebars",
+        "path": "./syntaxes/python-handlebars.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "markdown-template.python.interpolation",
+        "path": "./syntaxes/python-interpolation.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "markdown-template.python.spans",
+        "path": "./syntaxes/python-spans.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      }
+    ]
+  },
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#005696",

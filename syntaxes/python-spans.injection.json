@@ -1,0 +1,9 @@
+{
+  "scopeName": "markdown-template.python.spans",
+  "injectionSelector": "L:meta.template.pymdbars (markup.bold.markdown | markup.italic.markdown | string.other.link.title.markdown) -markup.inline.raw.string.markdown",
+  "patterns": [
+    {
+      "include": "markdown-template.python.entry#inline-code"
+    }
+  ]
+}

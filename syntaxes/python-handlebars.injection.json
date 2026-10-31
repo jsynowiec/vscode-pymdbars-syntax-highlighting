@@ -1,0 +1,533 @@
+{
+  "scopeName": "markdown-template.python.handlebars",
+  "injectionSelector": "L:meta.template.pymdbars.plain -meta.handlebars.pymdbars",
+  "patterns": [
+    {
+      "include": "#plain-tags"
+    }
+  ],
+  "repository": {
+    "plain-tags": {
+      "patterns": [
+        {
+          "include": "#comment-block-plain"
+        },
+        {
+          "include": "#comment-plain"
+        },
+        {
+          "include": "#block-close-plain"
+        },
+        {
+          "include": "#block-open-plain"
+        },
+        {
+          "include": "#bare-else-plain"
+        },
+        {
+          "include": "#else-plain"
+        },
+        {
+          "include": "#partial-plain"
+        },
+        {
+          "include": "#expression-plain"
+        }
+      ]
+    },
+    "fstring-tags": {
+      "patterns": [
+        {
+          "include": "#comment-block-fstring"
+        },
+        {
+          "include": "#comment-fstring"
+        },
+        {
+          "include": "#block-close-fstring"
+        },
+        {
+          "include": "#block-open-fstring"
+        },
+        {
+          "include": "#bare-else-fstring"
+        },
+        {
+          "include": "#else-fstring"
+        },
+        {
+          "include": "#partial-fstring"
+        },
+        {
+          "include": "#expression-fstring"
+        }
+      ]
+    },
+    "fstring-interpolation": {
+      "name": "meta.interpolation.pymdbars",
+      "begin": "\\{(?!\\{)",
+      "beginCaptures": {
+        "0": {
+          "name": "constant.character.format.placeholder.other.python"
+        }
+      },
+      "end": "(\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "constant.character.format.placeholder.other.python"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.python#fstring-terminator-multi"
+        },
+        {
+          "include": "source.python#f-expression"
+        }
+      ]
+    },
+    "args-plain": {
+      "patterns": [
+        {
+          "name": "meta.subexpression.handlebars",
+          "begin": "\\(",
+          "end": "\\)|(?=~?\\}\\})|(?=\"\"\"|''')",
+          "patterns": [
+            {
+              "include": "#args-plain"
+            }
+          ]
+        },
+        {
+          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\"|''')[^|\\n])*)(\\|)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.handlebars"
+            },
+            "2": {
+              "name": "punctuation.definition.parameters.begin.handlebars"
+            },
+            "3": {
+              "name": "variable.parameter.handlebars"
+            },
+            "4": {
+              "name": "punctuation.definition.parameters.end.handlebars"
+            }
+          }
+        },
+        {
+          "match": "([\\w-]+)(=)",
+          "captures": {
+            "1": {
+              "name": "entity.other.attribute-name.handlebars"
+            },
+            "2": {
+              "name": "keyword.operator.assignment.handlebars"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.double.handlebars",
+          "begin": "\"",
+          "end": "(?=\"\"\"|''')|\"|$"
+        },
+        {
+          "name": "string.quoted.single.handlebars",
+          "begin": "'",
+          "end": "(?=\"\"\"|''')|'|$"
+        },
+        {
+          "name": "constant.numeric.handlebars",
+          "match": "(?<![\\w.@/-])-?\\d+(?:\\.\\d+)?(?![\\w.@/-])"
+        },
+        {
+          "name": "constant.language.handlebars",
+          "match": "(?<![\\w.@/-])(?:true|false|null|undefined)(?![\\w.@/-])"
+        },
+        {
+          "name": "variable.parameter.handlebars",
+          "match": "[\\w./@-]+"
+        }
+      ]
+    },
+    "comment-block-plain": {
+      "name": "comment.block.handlebars meta.handlebars.pymdbars",
+      "begin": "\\{\\{~?!--",
+      "end": "--~?\\}\\}|(?=\"\"\"|''')"
+    },
+    "comment-plain": {
+      "name": "comment.block.handlebars meta.handlebars.pymdbars",
+      "begin": "\\{\\{~?!",
+      "end": "\\}\\}|(?=\"\"\"|''')"
+    },
+    "block-close-plain": {
+      "name": "meta.function.block.end.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{~?/)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "\\b(?:if|unless|each|with)(?![\\w./@-])",
+              "name": "keyword.control.handlebars"
+            },
+            {
+              "match": "[\\w./@-]+",
+              "name": "entity.name.function.handlebars"
+            }
+          ]
+        }
+      },
+      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "block-open-plain": {
+      "name": "meta.function.block.start.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{~?[#^]\\*?)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "\\b(?:if|unless|each|with)(?![\\w./@-])",
+              "name": "keyword.control.handlebars"
+            },
+            {
+              "match": "[\\w./@-]+",
+              "name": "entity.name.function.handlebars"
+            }
+          ]
+        }
+      },
+      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-plain"
+        }
+      ]
+    },
+    "bare-else-plain": {
+      "name": "meta.function.inline.else.handlebars meta.handlebars.pymdbars",
+      "match": "(\\{\\{~?)\\s*(\\^)\\s*(~?\\}\\})",
+      "captures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control.handlebars"
+        },
+        "3": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "else-plain": {
+      "name": "meta.function.inline.else.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{~?)\\s*(else)(?![\\w./@-])",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control.handlebars"
+        }
+      },
+      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-plain"
+        }
+      ]
+    },
+    "partial-plain": {
+      "name": "meta.function.inline.other.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{~?>)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "variable.parameter.handlebars"
+        }
+      },
+      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-plain"
+        }
+      ]
+    },
+    "expression-plain": {
+      "name": "meta.function.inline.other.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{?~?&?)\\s*(?:([\\w./@-]+)(?=\\s+[^\\s~}])|([\\w./@-]+))?",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.function.handlebars"
+        },
+        "3": {
+          "name": "variable.parameter.handlebars"
+        }
+      },
+      "end": "(~?\\}\\}\\}?)|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-plain"
+        }
+      ]
+    },
+    "args-fstring": {
+      "patterns": [
+        {
+          "include": "#fstring-interpolation"
+        },
+        {
+          "name": "meta.subexpression.handlebars",
+          "begin": "\\(",
+          "end": "\\)|(?=~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+          "patterns": [
+            {
+              "include": "#args-fstring"
+            }
+          ]
+        },
+        {
+          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\"|''')[^|\\n])*)(\\|)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.handlebars"
+            },
+            "2": {
+              "name": "punctuation.definition.parameters.begin.handlebars"
+            },
+            "3": {
+              "name": "variable.parameter.handlebars"
+            },
+            "4": {
+              "name": "punctuation.definition.parameters.end.handlebars"
+            }
+          }
+        },
+        {
+          "match": "([\\w-]+)(=)",
+          "captures": {
+            "1": {
+              "name": "entity.other.attribute-name.handlebars"
+            },
+            "2": {
+              "name": "keyword.operator.assignment.handlebars"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.double.handlebars",
+          "begin": "\"",
+          "end": "(?=\"\"\"|''')|\"|$"
+        },
+        {
+          "name": "string.quoted.single.handlebars",
+          "begin": "'",
+          "end": "(?=\"\"\"|''')|'|$"
+        },
+        {
+          "name": "constant.numeric.handlebars",
+          "match": "(?<![\\w.@/-])-?\\d+(?:\\.\\d+)?(?![\\w.@/-])"
+        },
+        {
+          "name": "constant.language.handlebars",
+          "match": "(?<![\\w.@/-])(?:true|false|null|undefined)(?![\\w.@/-])"
+        },
+        {
+          "name": "variable.parameter.handlebars",
+          "match": "[\\w./@-]+"
+        }
+      ]
+    },
+    "comment-block-fstring": {
+      "name": "comment.block.handlebars meta.handlebars.pymdbars",
+      "begin": "\\{\\{\\{\\{~?!--",
+      "end": "--~?\\}\\}\\}\\}|(?=\"\"\"|''')"
+    },
+    "comment-fstring": {
+      "name": "comment.block.handlebars meta.handlebars.pymdbars",
+      "begin": "\\{\\{\\{\\{~?!",
+      "end": "\\}\\}\\}\\}|(?=\"\"\"|''')"
+    },
+    "block-close-fstring": {
+      "name": "meta.function.block.end.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{\\{~?/)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "\\b(?:if|unless|each|with)(?![\\w./@-])",
+              "name": "keyword.control.handlebars"
+            },
+            {
+              "match": "[\\w./@-]+",
+              "name": "entity.name.function.handlebars"
+            }
+          ]
+        }
+      },
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "block-open-fstring": {
+      "name": "meta.function.block.start.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{\\{~?[#^]\\*?)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "\\b(?:if|unless|each|with)(?![\\w./@-])",
+              "name": "keyword.control.handlebars"
+            },
+            {
+              "match": "[\\w./@-]+",
+              "name": "entity.name.function.handlebars"
+            }
+          ]
+        }
+      },
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-fstring"
+        }
+      ]
+    },
+    "bare-else-fstring": {
+      "name": "meta.function.inline.else.handlebars meta.handlebars.pymdbars",
+      "match": "(\\{\\{\\{\\{~?)\\s*(\\^)\\s*(~?\\}\\}\\}\\})",
+      "captures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control.handlebars"
+        },
+        "3": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "else-fstring": {
+      "name": "meta.function.inline.else.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{\\{~?)\\s*(else)(?![\\w./@-])",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control.handlebars"
+        }
+      },
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-fstring"
+        }
+      ]
+    },
+    "partial-fstring": {
+      "name": "meta.function.inline.other.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{\\{~?>)\\s*([\\w./@-]+)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "variable.parameter.handlebars"
+        }
+      },
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-fstring"
+        }
+      ]
+    },
+    "expression-fstring": {
+      "name": "meta.function.inline.other.handlebars meta.handlebars.pymdbars",
+      "begin": "(\\{\\{\\{\\{(?:\\{\\{)?~?&?)\\s*(?:([\\w./@-]+)(?=\\s+[^\\s~}])|([\\w./@-]+))?",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.function.handlebars"
+        },
+        "3": {
+          "name": "variable.parameter.handlebars"
+        }
+      },
+      "end": "(~?\\}\\}\\}\\}(?:\\}\\})?)|(?=\"\"\"|''')",
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#args-fstring"
+        }
+      ]
+    }
+  }
+}
