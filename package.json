@@ -1,7 +1,7 @@
 {
   "name": "vscode-pymdbars-syntax-highlighting",
-  "displayName": "",
-  "description": "",
+  "displayName": "PyMDBars - Markdown Handlebars highlighting in Python",
+  "description": "Syntax highlighting for Markdown, Python expressions, and Handlebars prompt templates in Python code.",
   "version": "0.1.0",
   "publisher": "jsynowiec",
   "homepage": "https://github.com/jsynowiec/vscode-pymdbars-syntax-highlighting#readme",
@@ -46,8 +46,20 @@
     "syntaxes/*.json",
     "images/icon.png"
   ],
-  "categories": [],
-  "keywords": [],
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "python",
+    "markdown",
+    "handlebars",
+    "syntax highlighting",
+    "prompt templates",
+    "pydantic",
+    "pydantic ai",
+    "templatestr",
+    "f-string"
+  ],
   "contributes": {
     "grammars": [
       {

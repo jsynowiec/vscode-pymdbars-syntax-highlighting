@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- Markdown highlighting inside triple-quoted strings passed to `TemplateStr(...)`, including `f`, `r`, `rf` and `fr` prefixes (any case) and both quote styles.
-- Python f-string expressions, `{{` and `}}` escapes, and Python escape sequences in those strings.
-- Opt-in highlighting for other triple-quoted strings with a `# prompt: markdown` comment on the line above the assignment. Strings without an `f` prefix are read like f-strings. Use `# prompt: markdown-handlebars` to read them as Handlebars templates instead.
-- Handlebars variables, conditionals, loops, partials, comments and helper calls. In plain strings they are written as `{{name}}`; in f-strings as `{{{{name}}}}`.
+- Markdown highlighting in triple-quoted strings passed to `TemplateStr(...)`. Both quote styles and the `f`, `r`, `rf`, and `fr` prefixes are supported, regardless of case.
+- Highlighting for Python f-string expressions, `{{` and `}}` escapes, and Python escape sequences in those strings.
+- Opt-in highlighting for other triple-quoted string assignments. Place `# prompt: markdown` on the line above an assignment to highlight the string like an f-string, even without an `f` prefix. Use `# prompt: markdown-handlebars` to highlight a string without an `f` prefix as a Handlebars template.
+- Highlighting for Handlebars variables, conditionals, loops, partials, comments, and helper calls. Use `{{name}}` in plain strings and `{{{{name}}}}` in f-strings.
