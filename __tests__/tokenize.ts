@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import * as vscodeTextmate from "vscode-textmate";
 import * as vscodeOniguruma from "vscode-oniguruma";
+import * as vscodeTextmate from "vscode-textmate";
 
-const root = join(__dirname, "..", "..");
+const root = join(__dirname, "..");
 
 const grammarFiles: Record<string, string> = {
   "source.python": join(__dirname, "grammars", "MagicPython.tmLanguage.json"),

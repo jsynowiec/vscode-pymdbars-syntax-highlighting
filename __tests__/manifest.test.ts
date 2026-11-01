@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-const root = join(__dirname, "..", "..");
+const root = join(__dirname, "..");
 
 interface GrammarContribution {
   scopeName: string;
