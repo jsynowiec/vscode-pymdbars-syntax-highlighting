@@ -28,9 +28,11 @@ describe("template text is a string or comment token", () => {
   for (const [name, source] of Object.entries(templates)) {
     it(name, async () => {
       const types = await tokenTypesOf(source);
+
       // Everything between the first and the last triple quote is template text.
       const bodyStart = source.search(/"""|'''/) + 3;
       const bodyEnd = Math.max(source.lastIndexOf('"""'), source.lastIndexOf("'''"));
+
       assert.ok(bodyEnd > bodyStart);
 
       let offset = 0;
@@ -41,6 +43,7 @@ describe("template text is a string or comment token", () => {
           if (at < bodyStart || at >= bodyEnd) continue;
           // Handlebars comments are comment tokens, which VS Code also treats as prose.
           const type = types[row][col];
+
           assert.ok(
             type === "string" || type === "comment",
             `line ${row}, column ${col} is ${type}: ${line.slice(col)}`,

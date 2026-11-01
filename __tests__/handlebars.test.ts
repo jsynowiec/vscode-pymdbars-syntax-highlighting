@@ -93,6 +93,7 @@ describe("Handlebars in a plain TemplateStr string", () => {
 describe("Handlebars in an f-string TemplateStr string", () => {
   it("treats four braces as Handlebars and highlights {expr} as Python", async () => {
     const lines = await tokenizePython(tpl("Hi {name}, write {{{{language}}}}.", "f"));
+
     assertScopes(scopesOf(lines, 0, "language"), [
       "meta.function.inline.other.handlebars",
       "variable.parameter.handlebars",
@@ -107,6 +108,7 @@ describe("Handlebars in an f-string TemplateStr string", () => {
     const lines = await tokenizePython(
       tpl("{{{{#if admin}}}}\nyes\n{{{{else}}}}\nno\n{{{{/if}}}}\n", "f"),
     );
+
     assertScopes(scopesOf(lines, 0, "if"), ["keyword.control.handlebars"]);
     assertScopes(scopesOf(lines, 2, "else"), ["keyword.control.handlebars"]);
     assertScopes(scopesOf(lines, 4, "if"), ["keyword.control.handlebars"]);
@@ -114,17 +116,20 @@ describe("Handlebars in an f-string TemplateStr string", () => {
 
   it("scopes six braces as triple-stash output", async () => {
     const lines = await tokenizePython(tpl("{{{{{{raw}}}}}}", "f"));
+
     assertScopes(scopesOf(lines, 0, "raw"), ["meta.function.inline.other.handlebars"]);
   });
 
   it("keeps two braces as Python escapes, not Handlebars", async () => {
     const lines = await tokenizePython(tpl("{{literal}}", "f"));
+
     assertScopes(scopesOf(lines, 0, "{{"), ["constant.character.escape.python"]);
     assertNoScopes(scopesOf(lines, 0, "literal"), ["meta.function.inline.other.handlebars"]);
   });
 
   it("reads three braces like Python: escaped brace, expression, escaped brace", async () => {
     const lines = await tokenizePython(tpl("{{{x}}}", "f"));
+
     assertScopes(scopesOf(lines, 0, "{{"), ["constant.character.escape.python"]);
     assertScopes(scopesOf(lines, 0, "x"), ["meta.interpolation.pymdbars"]);
     assertScopes(scopesOf(lines, 0, "}}"), ["constant.character.escape.python"]);
@@ -132,6 +137,7 @@ describe("Handlebars in an f-string TemplateStr string", () => {
 
   it("reads an f-string expression inside a Handlebars tag as Python", async () => {
     const lines = await tokenizePython(tpl("{{{{#if {flag}}}}}yes{{{{/if}}}}", "f"));
+
     assertScopes(scopesOf(lines, 0, "flag"), ["meta.interpolation.pymdbars"]);
     assertNoScopes(scopesOf(lines, 0, "flag"), ["variable.parameter.handlebars"]);
     assertNoScopes(scopesOf(lines, 0, "yes"), ["meta.function.block.start.handlebars"]);
@@ -139,6 +145,7 @@ describe("Handlebars in an f-string TemplateStr string", () => {
 
   it("reads an f-string expression as the whole content of a tag", async () => {
     const lines = await tokenizePython(tpl("{{{{{x}}}}}", "f"));
+
     assertScopes(scopesOf(lines, 0, "x"), ["meta.interpolation.pymdbars"]);
   });
 
@@ -153,17 +160,20 @@ describe("the other quote style inside a tag or expression", () => {
 
   it("does not end a Handlebars tag", async () => {
     const lines = await tokenizePython(tag);
+
     assertScopes(scopesOf(lines, 0, "}}"), ["support.constant.handlebars"]);
   });
 
   it("does not end an f-string expression", async () => {
     const lines = await tokenizePython(expression);
+
     assertScopes(scopesOf(lines, 0, "k"), ["meta.interpolation.pymdbars"]);
   });
 
   it("also preserves the other quote style with double-quoted outer strings", async () => {
     const tag = `p = TemplateStr("""{{upper '''}}""")`;
     const expression = `p = TemplateStr(f'''{d["""k"""]}''')`;
+
     assertScopes(scopesOf(await tokenizePython(tag), 0, "}}"), ["support.constant.handlebars"]);
     assertScopes(scopesOf(await tokenizePython(expression), 0, "k"), [
       "meta.interpolation.pymdbars",
@@ -174,6 +184,7 @@ describe("the other quote style inside a tag or expression", () => {
 
   it("keeps tag delimiters inside complete quoted arguments", async () => {
     const lines = await tokenizePython(tpl(`{{upper "}}" sep='}}'}}`));
+
     assertScopes(scopesOf(lines, 0, "}}"), ["string.quoted.double.handlebars"]);
   });
 

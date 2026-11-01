@@ -12,6 +12,7 @@ describe("# prompt: markdown", () => {
     const lines = await tokenizePython(
       '# prompt: markdown\nPROMPT = """# Title\nHi {name}, **{tone}**\n"""\nx = 1',
     );
+
     assertScopes(scopesOf(lines, 1, "Title"), [
       "meta.template.pymdbars.fstring",
       "markup.heading.markdown",
@@ -25,6 +26,7 @@ describe("# prompt: markdown", () => {
 
   it("reads Handlebars written with four braces", async () => {
     const lines = await tokenizePython('# prompt: markdown\nP = """{{{{#if a}}}}x{{{{/if}}}}"""');
+
     assertScopes(scopesOf(lines, 1, "if"), ["keyword.control.handlebars"]);
   });
 
@@ -45,6 +47,7 @@ describe("# prompt: markdown", () => {
       const quotes = open.slice(-3);
       const source = `# prompt: markdown\nP = ${open}# T {a}\n${quotes}\nx = 1`;
       const lines = await assertLikePlainPython(source, -1);
+
       assertScopes(scopesOf(lines, 1, "T"), ["markup.heading.markdown"]);
       assertScopes(scopesOf(lines, 1, "a"), ["meta.interpolation.pymdbars"]);
     });
@@ -82,6 +85,7 @@ describe("# prompt: markdown-handlebars", () => {
     const lines = await tokenizePython(
       '# prompt: markdown-handlebars\nP = """# Hi {{name}}\nkeep {x}\n"""',
     );
+
     assertScopes(scopesOf(lines, 1, "name"), [
       "meta.template.pymdbars.plain",
       "meta.function.inline.other.handlebars",
@@ -91,6 +95,7 @@ describe("# prompt: markdown-handlebars", () => {
 
   it("still treats an explicit f prefix as an f-string", async () => {
     const lines = await tokenizePython('# prompt: markdown-handlebars\nP = f"""{a} {{{{b}}}}"""');
+
     assertScopes(scopesOf(lines, 1, "a"), ["meta.interpolation.pymdbars"]);
     assertScopes(scopesOf(lines, 1, "b"), ["meta.function.inline.other.handlebars"]);
   });
@@ -100,6 +105,7 @@ describe("# prompt: markdown-handlebars", () => {
       '# prompt: markdown-handlebars\nP = r"""# {{a}}\n"""\nx = 1',
       -1,
     );
+
     assertScopes(scopesOf(lines, 1, "a"), ["meta.function.inline.other.handlebars"]);
   });
 });

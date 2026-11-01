@@ -3,9 +3,7 @@ import { describe, it } from "node:test";
 import { assertScopes, closerToken, tokenizePython } from "./tokenize";
 
 // The grammar cannot see the end of a string until the closing quotes arrive, so every Markdown
-// and template construct must give way to them, however unfinished it is. The oracle is the
-// line after the string: it must tokenize as plain Python tokenizes that line on its own. (Plain
-// Python is no oracle for the whole source: it leaves f-strings with an unterminated brace open.)
+// and template construct must give way to them, however unfinished it is.
 
 interface Wrapper {
   /** Everything before the opening quotes. */
@@ -108,8 +106,10 @@ describe("closing quotes end the string", () => {
           const close = `${wrapper.quote}${wrapper.after}`;
           const source = `${layout(open, body, close)}\n${FOLLOWING_LINE}`;
           const context = JSON.stringify(source);
+
           const lines = await tokenizePython(source);
           assert.deepEqual(lines.at(-1), expected, `code after the string is affected: ${context}`);
+
           const closer = closerToken(lines);
           assert.ok(closer, `no closing quotes found: ${context}`);
           assertScopes(closer.scopes, ["punctuation.definition.string.end.python"]);

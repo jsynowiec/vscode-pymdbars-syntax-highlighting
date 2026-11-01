@@ -28,6 +28,7 @@ describe("string prefixes and delimiters", () => {
     it(`highlights Markdown and ends the string: ${name}`, async () => {
       const source = `p = TemplateStr(${open}# Title\n    *em*\n    ${quotes})\nx = 1`;
       const lines = await assertLikePlainPython(source, -1);
+
       assertScopes(scopesOf(lines, 0, "Title"), [
         `meta.template.pymdbars.${kind}`,
         "markup.heading.markdown",
@@ -39,6 +40,7 @@ describe("string prefixes and delimiters", () => {
 
   it("interpolates {expr} in raw f-strings", async () => {
     const lines = await tokenizePython('TemplateStr(rf"""Hi {name}""")');
+
     assertScopes(scopesOf(lines, 0, "name"), ["meta.interpolation.pymdbars"]);
   });
 
@@ -54,6 +56,7 @@ describe("escapes", () => {
         `p = TemplateStr(${prefix}"""a \\""" b""")\nx = 1`,
         -1,
       );
+
       assertScopes(scopesOf(lines, 0, '"" b'), [
         prefix.includes("f") ? "meta.template.pymdbars.fstring" : "meta.template.pymdbars.plain",
       ]);
@@ -61,6 +64,7 @@ describe("escapes", () => {
 
     it(`ends the string after an escaped backslash: prefix '${prefix}'`, async () => {
       const lines = await tokenizePython(`p = TemplateStr(${prefix}"""a \\\\""")\nx = 1`);
+
       assertScopes(closerToken(lines)?.scopes ?? [], ["punctuation.definition.string.end.python"]);
     });
   }
