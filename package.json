@@ -16,16 +16,16 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run check",
-    "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test",
-    "generate": "tsx scripts/generate-grammars.ts",
+    "check": "pnpm run typecheck && pnpm run lint && pnpm run format && pnpm run test",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint __tests__ scripts",
     "lint:fix": "oxlint --fix __tests__ scripts",
-    "format:check": "oxfmt --check '{__tests__,scripts,syntaxes}/**/*.{ts,json}'",
-    "format": "oxfmt '{__tests__,scripts,syntaxes}/**/*.{ts,json}'",
+    "format": "oxfmt --check '{__tests__,scripts,syntaxes}/**/*.{ts,json}'",
+    "format:fix": "oxfmt '{__tests__,scripts,syntaxes}/**/*.{ts,json}'",
     "test": "tsx --test __tests__/*.test.ts",
+    "generate": "tsx scripts/generate-grammars.ts",
     "package": "pnpm vsce package --no-dependencies",
-    "publish": "pnpm vsce publish --no-dependencies"
+    "publish": "pnpm vsce publish --no-dependencies --oidc"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
@@ -41,6 +41,7 @@
     "vscode": "^1.101.0",
     "node": ">= 22"
   },
+  "packageManager": "pnpm@12.16.1",
   "files": [
     "LICENSE",
     "syntaxes/*.json",
@@ -60,6 +61,7 @@
     "templatestr",
     "f-string"
   ],
+  "pricing": "Free",
   "contributes": {
     "grammars": [
       {
