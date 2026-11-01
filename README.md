@@ -86,7 +86,6 @@ Unmarked strings outside `TemplateStr(...)` keep their normal Python highlightin
 - Markdown tables, setext headings, link definitions, HTML blocks, and front matter do not have dedicated highlighting.
 - Fenced code blocks do not highlight the language inside the fence.
 - A marker does not apply when the assignment's string starts on a later line or the right-hand side is parenthesised.
-- A triple-quoted string of the other quote style inside a Handlebars tag or f-string expression can end that tag or expression's highlighting early.
 - Python escapes inside an open Markdown span, such as bold text or a link, may not be highlighted correctly.
 - The extension provides syntax highlighting only. It does not render, preview, validate, or autocomplete templates.
 

@@ -70,14 +70,14 @@
         ]
       },
       {
-        "scopeName": "markdown-template.python.handlebars",
+        "scopeName": "markdown-template.python.handlebars.dq",
         "path": "./syntaxes/python-handlebars.injection.json",
         "injectTo": [
           "source.python"
         ]
       },
       {
-        "scopeName": "markdown-template.python.interpolation",
+        "scopeName": "markdown-template.python.interpolation.dq",
         "path": "./syntaxes/python-interpolation.injection.json",
         "injectTo": [
           "source.python"
@@ -86,6 +86,20 @@
       {
         "scopeName": "markdown-template.python.spans",
         "path": "./syntaxes/python-spans.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "markdown-template.python.handlebars.sq",
+        "path": "./syntaxes/python-handlebars-sq.injection.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "markdown-template.python.interpolation.sq",
+        "path": "./syntaxes/python-interpolation-sq.injection.json",
         "injectTo": [
           "source.python"
         ]

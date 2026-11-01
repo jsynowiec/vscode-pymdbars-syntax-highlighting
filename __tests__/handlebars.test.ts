@@ -147,20 +147,34 @@ describe("Handlebars in an f-string TemplateStr string", () => {
   });
 });
 
-// The grammar cannot tell which quote style encloses a Handlebars tag or an f-string expression,
-// so the other style ends them early. The string itself still closes at the right place.
 describe("the other quote style inside a tag or expression", () => {
   const tag = "p = TemplateStr('''{{upper \"\"\"}}''')";
   const expression = "p = TemplateStr(f\"\"\"{d['''k''']}\"\"\")";
 
-  it("does not end a Handlebars tag", { todo: "known gap" }, async () => {
+  it("does not end a Handlebars tag", async () => {
     const lines = await tokenizePython(tag);
     assertScopes(scopesOf(lines, 0, "}}"), ["support.constant.handlebars"]);
   });
 
-  it("does not end an f-string expression", { todo: "known gap" }, async () => {
+  it("does not end an f-string expression", async () => {
     const lines = await tokenizePython(expression);
     assertScopes(scopesOf(lines, 0, "k"), ["meta.interpolation.pymdbars"]);
+  });
+
+  it("also preserves the other quote style with double-quoted outer strings", async () => {
+    const tag = `p = TemplateStr("""{{upper '''}}""")`;
+    const expression = `p = TemplateStr(f'''{d["""k"""]}''')`;
+    assertScopes(scopesOf(await tokenizePython(tag), 0, "}}"), ["support.constant.handlebars"]);
+    assertScopes(scopesOf(await tokenizePython(expression), 0, "k"), [
+      "meta.interpolation.pymdbars",
+    ]);
+    await assertLikePlainPython(`${tag}\nx = 1`, -1);
+    await assertLikePlainPython(`${expression}\nx = 1`, -1);
+  });
+
+  it("keeps tag delimiters inside complete quoted arguments", async () => {
+    const lines = await tokenizePython(tpl(`{{upper "}}" sep='}}'}}`));
+    assertScopes(scopesOf(lines, 0, "}}"), ["string.quoted.double.handlebars"]);
   });
 
   it("still closes the string", async () => {

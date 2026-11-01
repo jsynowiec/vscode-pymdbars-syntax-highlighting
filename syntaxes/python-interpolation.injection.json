@@ -1,15 +1,15 @@
 {
-  "scopeName": "markdown-template.python.interpolation",
-  "injectionSelector": "L:meta.template.pymdbars.fstring -meta.interpolation.pymdbars -meta.handlebars.pymdbars",
+  "scopeName": "markdown-template.python.interpolation.dq",
+  "injectionSelector": "L:meta.template.pymdbars.fstring meta.template.quotes.dq -meta.interpolation.pymdbars -meta.handlebars.pymdbars",
   "patterns": [
     {
-      "include": "markdown-template.python.handlebars#fstring-tags"
+      "include": "markdown-template.python.handlebars.dq#fstring-tags"
     },
     {
       "include": "#escaped-brace"
     },
     {
-      "include": "markdown-template.python.handlebars#fstring-interpolation"
+      "include": "markdown-template.python.handlebars.dq#fstring-interpolation"
     }
   ],
   "repository": {

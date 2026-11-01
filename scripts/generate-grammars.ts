@@ -15,7 +15,6 @@ export const SYNTAX_ROOT_PATH = join(ROOT_PATH, SYNTAX_PATH);
 
 /** Lookahead for the string's own closing quotes; ends any construct still open when they arrive. */
 const QUOTES_AHEAD = `(?="""|''')`;
-const NOT_AT_QUOTES = `(?!"""|''')`;
 const STRING_SCOPES = "string.interpolated.python string.quoted.multi.python";
 /** Marks Handlebars tags so the injections that would otherwise match inside them can exclude them. */
 const HANDLEBARS_SCOPE = "meta.handlebars.pymdbars";
@@ -54,14 +53,15 @@ const FSTRING: Delimiters = {
 };
 
 /** A Python `{expression}` in an f-string. */
-function fstringInterpolationRule(): Rule {
+function fstringInterpolationRule(quote: Quote): Rule {
+  const quotesAhead = `(?=${quote.text})`;
   const placeholder = { name: "constant.character.format.placeholder.other.python" };
 
   return {
     name: "meta.interpolation.pymdbars",
     begin: String.raw`\{(?!\{)`,
     beginCaptures: { "0": placeholder },
-    end: String.raw`(\})|${QUOTES_AHEAD}`,
+    end: String.raw`(\})|${quotesAhead}`,
     endCaptures: { "1": placeholder },
     patterns: [
       { include: "source.python#fstring-terminator-multi" },
@@ -70,11 +70,16 @@ function fstringInterpolationRule(): Rule {
   };
 }
 
-function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters): {
+function handlebarsRules(
+  { id, open, close, extraOpen, extraClose }: Delimiters,
+  quote: Quote,
+): {
   rules: Rule;
   tags: Rule;
 } {
-  const end = `(~?${close})|${QUOTES_AHEAD}`;
+  const quotesAhead = `(?=${quote.text})`;
+  const notAtQuotes = `(?!${quote.text})`;
+  const end = `(~?${close})|${quotesAhead}`;
   const endCaptures = captures(SUPPORT_CONSTANT);
   const helperName: Rule = {
     patterns: [
@@ -96,11 +101,11 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
         {
           name: "meta.subexpression.handlebars",
           begin: String.raw`\(`,
-          end: String.raw`\)|(?=~?${close})|${QUOTES_AHEAD}`,
+          end: String.raw`\)|(?=~?${close})|${quotesAhead}`,
           patterns: [{ include: args }],
         },
         {
-          match: String.raw`\b(as)\s+(\|)((?:${NOT_AT_QUOTES}[^|\n])*)(\|)`,
+          match: String.raw`\b(as)\s+(\|)((?:${notAtQuotes}[^|\n])*)(\|)`,
           captures: captures(
             "keyword.control.handlebars",
             "punctuation.definition.parameters.begin.handlebars",
@@ -115,8 +120,26 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
             "keyword.operator.assignment.handlebars",
           ),
         },
-        { name: "string.quoted.double.handlebars", begin: '"', end: `${QUOTES_AHEAD}|"|$` },
-        { name: "string.quoted.single.handlebars", begin: "'", end: `${QUOTES_AHEAD}|'|$` },
+        {
+          name: "string.quoted.double.handlebars",
+          begin: String.raw`"(?=(?:${notAtQuotes}[^"\n])*${notAtQuotes}")`,
+          end: '"',
+        },
+        {
+          name: "string.quoted.single.handlebars",
+          begin: String.raw`'(?=(?:${notAtQuotes}[^'\n])*${notAtQuotes}')`,
+          end: "'",
+        },
+        {
+          name: "string.quoted.double.handlebars",
+          begin: '"',
+          end: `${quotesAhead}|(?=~?${close})|"|$`,
+        },
+        {
+          name: "string.quoted.single.handlebars",
+          begin: "'",
+          end: `${quotesAhead}|(?=~?${close})|'|$`,
+        },
         {
           name: "constant.numeric.handlebars",
           match: String.raw`(?<![\w.@/-])-?\d+(?:\.\d+)?(?![\w.@/-])`,
@@ -131,12 +154,12 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
     [`comment-block-${id}`]: {
       name: `comment.block.handlebars ${HANDLEBARS_SCOPE}`,
       begin: String.raw`${open}~?!--`,
-      end: String.raw`--~?${close}|${QUOTES_AHEAD}`,
+      end: String.raw`--~?${close}|${quotesAhead}`,
     },
     [`comment-${id}`]: {
       name: `comment.block.handlebars ${HANDLEBARS_SCOPE}`,
       begin: String.raw`${open}~?!`,
-      end: `${close}|${QUOTES_AHEAD}`,
+      end: `${close}|${quotesAhead}`,
     },
     [`block-close-${id}`]: {
       name: `meta.function.block.end.handlebars ${HANDLEBARS_SCOPE}`,
@@ -183,7 +206,7 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
         "entity.name.function.handlebars",
         "variable.parameter.handlebars",
       ),
-      end: `(~?${close}${extraClose})|${QUOTES_AHEAD}`,
+      end: `(~?${close}${extraClose})|${quotesAhead}`,
       endCaptures,
       patterns: [{ include: args }],
     },
@@ -205,32 +228,32 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
   return { rules, tags };
 }
 
-function handlebarsGrammar(): Rule {
-  const plain = handlebarsRules(PLAIN);
-  const fstring = handlebarsRules(FSTRING);
+function handlebarsGrammar(quote: Quote): Rule {
+  const plain = handlebarsRules(PLAIN, quote);
+  const fstring = handlebarsRules(FSTRING, quote);
 
   return {
-    scopeName: "markdown-template.python.handlebars",
-    injectionSelector: `L:meta.template.pymdbars.plain -${HANDLEBARS_SCOPE}`,
+    scopeName: `markdown-template.python.handlebars.${quote.id}`,
+    injectionSelector: `L:meta.template.pymdbars.plain meta.template.quotes.${quote.id} -${HANDLEBARS_SCOPE}`,
     patterns: [{ include: "#plain-tags" }],
     repository: {
       "plain-tags": plain.tags,
       "fstring-tags": fstring.tags,
-      "fstring-interpolation": fstringInterpolationRule(),
+      "fstring-interpolation": fstringInterpolationRule(quote),
       ...plain.rules,
       ...fstring.rules,
     },
   };
 }
 
-function interpolationGrammar(): Rule {
+function interpolationGrammar(quote: Quote): Rule {
   return {
-    scopeName: "markdown-template.python.interpolation",
-    injectionSelector: `L:meta.template.pymdbars.fstring -meta.interpolation.pymdbars -${HANDLEBARS_SCOPE}`,
+    scopeName: `markdown-template.python.interpolation.${quote.id}`,
+    injectionSelector: `L:meta.template.pymdbars.fstring meta.template.quotes.${quote.id} -meta.interpolation.pymdbars -${HANDLEBARS_SCOPE}`,
     patterns: [
-      { include: "markdown-template.python.handlebars#fstring-tags" },
+      { include: `markdown-template.python.handlebars.${quote.id}#fstring-tags` },
       { include: "#escaped-brace" },
-      { include: "markdown-template.python.handlebars#fstring-interpolation" },
+      { include: `markdown-template.python.handlebars.${quote.id}#fstring-interpolation` },
     ],
     repository: {
       "escaped-brace": { name: "constant.character.escape.python", match: String.raw`\{\{|\}\}` },
@@ -313,7 +336,7 @@ function stringRule({ kind, prefix, raw, isPythonFString }: StringFamily, quote:
     end: `(${quote.text})`,
     endCaptures: { "1": { name: `punctuation.definition.string.end.python ${STRING_SCOPES}` } },
     // The body counts as a string for VS Code (bracket pairing, auto-closing, suggestions).
-    contentName: `string.quoted.multi.python meta.template.pymdbars.${kind}`,
+    contentName: `string.quoted.multi.python meta.template.pymdbars.${kind} meta.template.quotes.${quote.id}`,
     patterns: [
       // Consume escaped quotes and backslashes so `\"""` does not close the string.
       { include: raw ? "#raw-escape" : "source.python#escape-sequence" },
@@ -545,8 +568,18 @@ function spansGrammar(): Rule {
 export function buildGrammars(): Record<string, Rule> {
   return {
     "python-entry.injection.json": entryGrammar(),
-    "python-interpolation.injection.json": interpolationGrammar(),
-    "python-handlebars.injection.json": handlebarsGrammar(),
+    ...Object.fromEntries(
+      QUOTES.flatMap((quote) => [
+        [
+          `python-interpolation${quote.id === "dq" ? "" : "-sq"}.injection.json`,
+          interpolationGrammar(quote),
+        ],
+        [
+          `python-handlebars${quote.id === "dq" ? "" : "-sq"}.injection.json`,
+          handlebarsGrammar(quote),
+        ],
+      ]),
+    ),
     "python-spans.injection.json": spansGrammar(),
   };
 }

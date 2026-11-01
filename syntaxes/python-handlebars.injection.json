@@ -1,6 +1,6 @@
 {
-  "scopeName": "markdown-template.python.handlebars",
-  "injectionSelector": "L:meta.template.pymdbars.plain -meta.handlebars.pymdbars",
+  "scopeName": "markdown-template.python.handlebars.dq",
+  "injectionSelector": "L:meta.template.pymdbars.plain meta.template.quotes.dq -meta.handlebars.pymdbars",
   "patterns": [
     {
       "include": "#plain-tags"
@@ -71,7 +71,7 @@
           "name": "constant.character.format.placeholder.other.python"
         }
       },
-      "end": "(\\})|(?=\"\"\"|''')",
+      "end": "(\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "constant.character.format.placeholder.other.python"
@@ -91,7 +91,7 @@
         {
           "name": "meta.subexpression.handlebars",
           "begin": "\\(",
-          "end": "\\)|(?=~?\\}\\})|(?=\"\"\"|''')",
+          "end": "\\)|(?=~?\\}\\})|(?=\"\"\")",
           "patterns": [
             {
               "include": "#args-plain"
@@ -99,7 +99,7 @@
           ]
         },
         {
-          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\"|''')[^|\\n])*)(\\|)",
+          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\")[^|\\n])*)(\\|)",
           "captures": {
             "1": {
               "name": "keyword.control.handlebars"
@@ -128,13 +128,23 @@
         },
         {
           "name": "string.quoted.double.handlebars",
+          "begin": "\"(?=(?:(?!\"\"\")[^\"\\n])*(?!\"\"\")\")",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.handlebars",
+          "begin": "'(?=(?:(?!\"\"\")[^'\\n])*(?!\"\"\")')",
+          "end": "'"
+        },
+        {
+          "name": "string.quoted.double.handlebars",
           "begin": "\"",
-          "end": "(?=\"\"\"|''')|\"|$"
+          "end": "(?=\"\"\")|(?=~?\\}\\})|\"|$"
         },
         {
           "name": "string.quoted.single.handlebars",
           "begin": "'",
-          "end": "(?=\"\"\"|''')|'|$"
+          "end": "(?=\"\"\")|(?=~?\\}\\})|'|$"
         },
         {
           "name": "constant.numeric.handlebars",
@@ -153,12 +163,12 @@
     "comment-block-plain": {
       "name": "comment.block.handlebars meta.handlebars.pymdbars",
       "begin": "\\{\\{~?!--",
-      "end": "--~?\\}\\}|(?=\"\"\"|''')"
+      "end": "--~?\\}\\}|(?=\"\"\")"
     },
     "comment-plain": {
       "name": "comment.block.handlebars meta.handlebars.pymdbars",
       "begin": "\\{\\{~?!",
-      "end": "\\}\\}|(?=\"\"\"|''')"
+      "end": "\\}\\}|(?=\"\"\")"
     },
     "block-close-plain": {
       "name": "meta.function.block.end.handlebars meta.handlebars.pymdbars",
@@ -180,7 +190,7 @@
           ]
         }
       },
-      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -207,7 +217,7 @@
           ]
         }
       },
-      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -245,7 +255,7 @@
           "name": "keyword.control.handlebars"
         }
       },
-      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -268,7 +278,7 @@
           "name": "variable.parameter.handlebars"
         }
       },
-      "end": "(~?\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -294,7 +304,7 @@
           "name": "variable.parameter.handlebars"
         }
       },
-      "end": "(~?\\}\\}\\}?)|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}?)|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -314,7 +324,7 @@
         {
           "name": "meta.subexpression.handlebars",
           "begin": "\\(",
-          "end": "\\)|(?=~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+          "end": "\\)|(?=~?\\}\\}\\}\\})|(?=\"\"\")",
           "patterns": [
             {
               "include": "#args-fstring"
@@ -322,7 +332,7 @@
           ]
         },
         {
-          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\"|''')[^|\\n])*)(\\|)",
+          "match": "\\b(as)\\s+(\\|)((?:(?!\"\"\")[^|\\n])*)(\\|)",
           "captures": {
             "1": {
               "name": "keyword.control.handlebars"
@@ -351,13 +361,23 @@
         },
         {
           "name": "string.quoted.double.handlebars",
+          "begin": "\"(?=(?:(?!\"\"\")[^\"\\n])*(?!\"\"\")\")",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.handlebars",
+          "begin": "'(?=(?:(?!\"\"\")[^'\\n])*(?!\"\"\")')",
+          "end": "'"
+        },
+        {
+          "name": "string.quoted.double.handlebars",
           "begin": "\"",
-          "end": "(?=\"\"\"|''')|\"|$"
+          "end": "(?=\"\"\")|(?=~?\\}\\}\\}\\})|\"|$"
         },
         {
           "name": "string.quoted.single.handlebars",
           "begin": "'",
-          "end": "(?=\"\"\"|''')|'|$"
+          "end": "(?=\"\"\")|(?=~?\\}\\}\\}\\})|'|$"
         },
         {
           "name": "constant.numeric.handlebars",
@@ -376,12 +396,12 @@
     "comment-block-fstring": {
       "name": "comment.block.handlebars meta.handlebars.pymdbars",
       "begin": "\\{\\{\\{\\{~?!--",
-      "end": "--~?\\}\\}\\}\\}|(?=\"\"\"|''')"
+      "end": "--~?\\}\\}\\}\\}|(?=\"\"\")"
     },
     "comment-fstring": {
       "name": "comment.block.handlebars meta.handlebars.pymdbars",
       "begin": "\\{\\{\\{\\{~?!",
-      "end": "\\}\\}\\}\\}|(?=\"\"\"|''')"
+      "end": "\\}\\}\\}\\}|(?=\"\"\")"
     },
     "block-close-fstring": {
       "name": "meta.function.block.end.handlebars meta.handlebars.pymdbars",
@@ -403,7 +423,7 @@
           ]
         }
       },
-      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -430,7 +450,7 @@
           ]
         }
       },
-      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -468,7 +488,7 @@
           "name": "keyword.control.handlebars"
         }
       },
-      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -491,7 +511,7 @@
           "name": "variable.parameter.handlebars"
         }
       },
-      "end": "(~?\\}\\}\\}\\})|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}\\})|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -517,7 +537,7 @@
           "name": "variable.parameter.handlebars"
         }
       },
-      "end": "(~?\\}\\}\\}\\}(?:\\}\\})?)|(?=\"\"\"|''')",
+      "end": "(~?\\}\\}\\}\\}(?:\\}\\})?)|(?=\"\"\")",
       "endCaptures": {
         "1": {
           "name": "support.constant.handlebars"

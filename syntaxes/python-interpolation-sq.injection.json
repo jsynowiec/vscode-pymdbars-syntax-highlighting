@@ -1,0 +1,21 @@
+{
+  "scopeName": "markdown-template.python.interpolation.sq",
+  "injectionSelector": "L:meta.template.pymdbars.fstring meta.template.quotes.sq -meta.interpolation.pymdbars -meta.handlebars.pymdbars",
+  "patterns": [
+    {
+      "include": "markdown-template.python.handlebars.sq#fstring-tags"
+    },
+    {
+      "include": "#escaped-brace"
+    },
+    {
+      "include": "markdown-template.python.handlebars.sq#fstring-interpolation"
+    }
+  ],
+  "repository": {
+    "escaped-brace": {
+      "name": "constant.character.escape.python",
+      "match": "\\{\\{|\\}\\}"
+    }
+  }
+}
