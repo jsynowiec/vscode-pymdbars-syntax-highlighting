@@ -47,6 +47,7 @@ describe("placeholders inside inline code", () => {
     ["italic", "*em `{x}` more*"],
     ["link text", "[`{x}`](http://a.b)"],
   ];
+
   for (const [name, text] of nested) {
     it(`highlights an f-string expression in code inside ${name}`, async () => {
       const lines = await tokenizePython(`TemplateStr(f"""${text}""")`);

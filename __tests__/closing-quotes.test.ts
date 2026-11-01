@@ -6,8 +6,6 @@ import { assertScopes, closerToken, tokenizePython } from "./tokenize";
 // and template construct must give way to them, however unfinished it is. The oracle is the
 // line after the string: it must tokenize as plain Python tokenizes that line on its own. (Plain
 // Python is no oracle for the whole source: it leaves f-strings with an unterminated brace open.)
-// Wholesale inclusion of the Markdown grammar failed most of these: its paragraph and
-// indented-code rules were still open when the quotes arrived.
 
 interface Wrapper {
   /** Everything before the opening quotes. */
@@ -101,6 +99,7 @@ describe("closing quotes end the string", () => {
     for (const [layoutName, layout] of Object.entries(layouts)) {
       it(`${wrapperName}, ${layoutName}`, async () => {
         const [expected] = await tokenizePython(FOLLOWING_LINE, false);
+
         for (const template of bodies) {
           const body = template
             .replaceAll("<ESC>", `\\${wrapper.quote}`)
@@ -124,6 +123,7 @@ describe("code after the closing quotes", () => {
   it("does not extend an unfinished inline code span past the quotes", async () => {
     const source = 'p = TemplateStr("""Use `x""")  # see `y`\n' + FOLLOWING_LINE;
     const lines = await tokenizePython(source);
+
     assertScopes(closerToken(lines)?.scopes ?? [], ["punctuation.definition.string.end.python"]);
     assert.deepEqual(lines.at(-1), (await tokenizePython(FOLLOWING_LINE, false))[0]);
   });

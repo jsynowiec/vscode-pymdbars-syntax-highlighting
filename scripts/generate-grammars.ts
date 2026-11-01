@@ -9,7 +9,9 @@ import { join } from "node:path";
 type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 type Rule = { [key: string]: Json };
 
-const SYNTAXES_DIR = join(__dirname, "..", "syntaxes");
+export const ROOT_PATH = join(__dirname, "..");
+export const SYNTAX_PATH = "syntaxes";
+export const SYNTAX_ROOT_PATH = join(ROOT_PATH, SYNTAX_PATH);
 
 /** Lookahead for the string's own closing quotes; ends any construct still open when they arrive. */
 const QUOTES_AHEAD = `(?="""|''')`;
@@ -54,6 +56,7 @@ const FSTRING: Delimiters = {
 /** A Python `{expression}` in an f-string. */
 function fstringInterpolationRule(): Rule {
   const placeholder = { name: "constant.character.format.placeholder.other.python" };
+
   return {
     name: "meta.interpolation.pymdbars",
     begin: String.raw`\{(?!\{)`,
@@ -198,12 +201,14 @@ function handlebarsRules({ id, open, close, extraOpen, extraClose }: Delimiters)
       "expression",
     ].map((name) => ({ include: `#${name}-${id}` })),
   };
+
   return { rules, tags };
 }
 
 function handlebarsGrammar(): Rule {
   const plain = handlebarsRules(PLAIN);
   const fstring = handlebarsRules(FSTRING);
+
   return {
     scopeName: "markdown-template.python.handlebars",
     injectionSelector: `L:meta.template.pymdbars.plain -${HANDLEBARS_SCOPE}`,
@@ -316,7 +321,9 @@ function stringRule({ kind, prefix, raw, isPythonFString }: StringFamily, quote:
       { include: `#markdown-body-${quote.id}` },
     ],
   };
+
   if (isPythonFString) rule.name = "meta.fstring.python";
+
   return rule;
 }
 
@@ -347,6 +354,7 @@ function markerRules(mode: "markdown" | "markdown-handlebars"): Rule {
           "string-default-fstring",
         ])
       : TEMPLATE_STRING_RULES;
+
   return {
     [`marker-${mode}`]: {
       begin: String.raw`^[ \t]*((#)[ \t]*prompt:[ \t]*${mode}[ \t]*)$`,
@@ -399,6 +407,7 @@ const CALL_ARGUMENTS: Rule[] = [
 function markdownBodyRules({ id, text }: Quote): [string, Rule][] {
   const quotesAhead = `(?=${text})`;
   const info = String.raw`((?:(?!${text})[^\s${TICK}])*)(?:(?!${text})[^${TICK}\n])*(?=$|${text})`;
+
   return [
     [
       `markdown-body-${id}`,
@@ -450,6 +459,7 @@ function markdownBodyRules({ id, text }: Quote): [string, Rule][] {
 
 function entryGrammar(): Rule {
   const stringRules: Rule = {};
+
   for (const [name, family] of Object.entries(STRING_FAMILIES))
     for (const quote of QUOTES) stringRules[`${name}-${quote.id}`] = stringRule(family, quote);
 
@@ -547,6 +557,6 @@ export function serialize(grammar: Rule): string {
 
 if (require.main === module) {
   for (const [file, grammar] of Object.entries(buildGrammars())) {
-    writeFileSync(join(SYNTAXES_DIR, file), serialize(grammar));
+    writeFileSync(join(SYNTAX_ROOT_PATH, file), serialize(grammar));
   }
 }

@@ -39,6 +39,7 @@ describe("# prompt: markdown", () => {
     ["u", 'u"""'],
     ["single quotes", "'''"],
   ];
+
   for (const [name, open] of prefixes) {
     it(`accepts the prefix and ends the string: ${name}`, async () => {
       const quotes = open.slice(-3);
@@ -61,6 +62,7 @@ describe("# prompt: markdown", () => {
       '        x: dict[str, int] = """# Three"""',
     ].join("\n");
     const lines = await tokenizePython(source);
+
     for (const [line, word] of [
       [2, "One"],
       [4, "Two"],
@@ -117,6 +119,7 @@ describe("marker scope limits", () => {
     "marker above a return": '# prompt: markdown\nreturn """# T"""',
     "marker above a comparison": '# prompt: markdown\nx == """# T"""',
   };
+
   for (const [name, source] of Object.entries(unmarked)) {
     it(`does not highlight the last string: ${name}`, async () => {
       await assertLikePlainPython(source, -1);

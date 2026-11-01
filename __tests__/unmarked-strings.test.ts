@@ -1,6 +1,5 @@
-import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { tokenizePython } from "./tokenize";
+import { assertLikePlainPython } from "./tokenize";
 
 // Anything that is neither inside TemplateStr(...) nor under a marker comment must tokenize exactly
 // like plain Python, line by line.
@@ -31,7 +30,7 @@ const samples: Record<string, string> = {
 describe("unmarked strings keep plain Python highlighting", () => {
   for (const [name, source] of Object.entries(samples)) {
     it(name, async () => {
-      assert.deepEqual(await tokenizePython(source), await tokenizePython(source, false));
+      await assertLikePlainPython(source);
     });
   }
 });

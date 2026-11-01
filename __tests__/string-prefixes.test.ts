@@ -72,10 +72,12 @@ describe("escapes", () => {
     ["raw", "r", false],
     ["raw f-string", "rf", false],
   ];
+
   for (const [name, prefix, escaped] of escapeCases) {
     it(`${escaped ? "scopes" : "does not scope"} \\n as a Python escape: ${name}`, async () => {
       const lines = await tokenizePython(`TemplateStr(${prefix}"""a\\nb""")`);
       const token = lines[0].find((t) => t.text.includes("\\n"));
+
       assert.ok(token, "no token contains the backslash sequence");
       if (escaped) assertScopes(token.scopes, [ESCAPE]);
       else assertNoScopes(token.scopes, [ESCAPE]);

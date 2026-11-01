@@ -32,7 +32,9 @@ describe("template text is a string or comment token", () => {
       const bodyStart = source.search(/"""|'''/) + 3;
       const bodyEnd = Math.max(source.lastIndexOf('"""'), source.lastIndexOf("'''"));
       assert.ok(bodyEnd > bodyStart);
+
       let offset = 0;
+
       for (const [row, line] of source.split("\n").entries()) {
         for (let col = 0; col < line.length; col++) {
           const at = offset + col;
